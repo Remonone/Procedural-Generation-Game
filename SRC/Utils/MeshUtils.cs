@@ -60,5 +60,26 @@ namespace Utils {
             mesh.normals = normals.ToArray();
             mesh.uv = uvs.ToArray();
         }
+        
+        public enum BlockSide {
+            BOTTOM = 0,
+            TOP = 1,
+            LEFT = 2,
+            RIGHT = 3,
+            FRONT = 4,
+            BACK = 5
+        }
+
+        public static Dictionary<string, Vector3> Vertices = new() {
+            { "p0", new Vector3(-0.5f, -0.5f, 0.5f) },
+            { "p1", new Vector3(0.5f, -0.5f, 0.5f) },
+            { "p2", new Vector3(0.5f, -0.5f, -0.5f) },
+            { "p3", new Vector3(-0.5f, -0.5f, -0.5f) },
+            { "p4", new Vector3(-0.5f, 0.5f, 0.5f) },
+            { "p5", new Vector3(0.5f, 0.5f, 0.5f) },
+            { "p6", new Vector3(0.5f, 0.5f, -0.5f) },
+            { "p7", new Vector3(-0.5f, 0.5f, -0.5f) }
+        };
+        
     }
 }

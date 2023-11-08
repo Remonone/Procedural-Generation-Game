@@ -1,10 +1,9 @@
-﻿using Unity.Burst;
-using Unity.Mathematics;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
 public class Chunk : MonoBehaviour {
     [SerializeField] private Material _atlas;
@@ -15,12 +14,29 @@ public class Chunk : MonoBehaviour {
 
     private Block[,,] _blocks;
 
+    private MeshUtils.BlockType[] _blocksData;
+
+    public MeshUtils.BlockType[] BlockData => _blocksData;
+    public int Width => _width;
+    public int Height => _height;
+    public int Depth => _depth;
+    
+    private void BuildChunk() {
+        var blockCount = _width * _height * _depth;
+        _blocksData = new MeshUtils.BlockType[blockCount];
+        for (int i = 0; i < blockCount; i++) {
+            _blocksData[i] = Random.Range(0, 100) < 95 ? MeshUtils.BlockType.DIRT : MeshUtils.BlockType.AIR;
+        }
+    }
+
     private void Start() {
         MeshFilter mf = gameObject.AddComponent<MeshFilter>();
         MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
 
         mr.material = _atlas;
         _blocks = new Block[_width, _height, _depth];
+        
+        BuildChunk();
 
         var inputMeshes = new List<Mesh>(_width * _height * _depth);
         int vertexStart = 0;
@@ -35,7 +51,8 @@ public class Chunk : MonoBehaviour {
         for (int z = 0; z < _depth; z++) {
             for (int y = 0; y < _height; y++) {
                 for (int x = 0; x < _width; x++) {
-                    _blocks[x, y, z] = new Block(new Vector3(x, y, z));
+                    _blocks[x, y, z] = new Block(new Vector3(x, y, z), _blocksData[x + _width * (y + _depth * z)], this);
+                    if (_blocks[x, y, z].Mesh == null) continue;
                     inputMeshes.Add(_blocks[x, y, z].Mesh);
                     var vcount = _blocks[x, y, z].Mesh.vertexCount;
                     var icount = (int)_blocks[x, y, z].Mesh.GetIndexCount(0);
@@ -56,7 +73,7 @@ public class Chunk : MonoBehaviour {
             new VertexAttributeDescriptor(VertexAttribute.Position), 
             new VertexAttributeDescriptor(VertexAttribute.Normal, stream: 1),
             new VertexAttributeDescriptor(VertexAttribute.TexCoord0, stream: 2));
-        var handle = jobs.Schedule(meshCount, 4);
+        var handle = jobs.Schedule(inputMeshes.Count, 4);
         var newMesh = new Mesh();
         newMesh.name = "Chunk";
         var sm = new SubMeshDescriptor(0, triangleStart, MeshTopology.Triangles);

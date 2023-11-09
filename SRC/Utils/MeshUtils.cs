@@ -121,5 +121,16 @@ namespace Utils {
                 new Vector2(0f, 0f), new Vector2(0f, 0f)
             }
         };
+        
+        public static float fBM(float x, float z, float scale, float heightScale, int octaves, float heightOffset) {
+            float total = 0;
+            float frequency = 1;
+            for (int i = 0; i < octaves; i++) {
+                total += Mathf.PerlinNoise(x * scale * frequency, z * scale * frequency) * heightScale;
+                frequency *= 2;
+            }
+
+            return total + heightOffset;
+        }
     }
 }

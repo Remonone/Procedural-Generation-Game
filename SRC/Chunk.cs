@@ -25,7 +25,10 @@ public class Chunk : MonoBehaviour {
         var blockCount = _width * _height * _depth;
         _blocksData = new MeshUtils.BlockType[blockCount];
         for (int i = 0; i < blockCount; i++) {
-            _blocksData[i] = Random.Range(0, 100) < 95 ? MeshUtils.BlockType.DIRT : MeshUtils.BlockType.AIR;
+            int x = i % _width;
+            int y = (i / _width) % _height;
+            int z = i / (_width * _height);
+            _blocksData[i] = MeshUtils.fBM(x, z, 0.001f, 10, 8, -33) > y ? MeshUtils.BlockType.DIRT : MeshUtils.BlockType.AIR;
         }
     }
 
@@ -38,7 +41,7 @@ public class Chunk : MonoBehaviour {
         
         BuildChunk();
 
-        var inputMeshes = new List<Mesh>(_width * _height * _depth);
+        var inputMeshes = new List<Mesh>();
         int vertexStart = 0;
         int triangleStart = 0;
         int meshCount = _width * _height * _depth;
@@ -48,9 +51,9 @@ public class Chunk : MonoBehaviour {
         jobs.vertexStart = new NativeArray<int>(meshCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
         jobs.triangleStart = new NativeArray<int>(meshCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
         
-        for (int z = 0; z < _depth; z++) {
+        for (int x = 0; x < _depth; x++) {
             for (int y = 0; y < _height; y++) {
-                for (int x = 0; x < _width; x++) {
+                for (int z = 0; z < _width; z++) {
                     _blocks[x, y, z] = new Block(new Vector3(x, y, z), _blocksData[x + _width * (y + _depth * z)], this);
                     if (_blocks[x, y, z].Mesh == null) continue;
                     inputMeshes.Add(_blocks[x, y, z].Mesh);

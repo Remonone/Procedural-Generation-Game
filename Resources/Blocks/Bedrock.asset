@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31f308374b6a425b90032368165b2542, type: 3}
-  m_Name: Stone
+  m_Name: Bedrock
   m_EditorClassIdentifier: 
-  _id: 3
-  _name: Stone
+  _id: 10
+  _name: Bedrock
   _sides:
   - side: 0
     uv:
+    - {x: 0.0625, y: 0.875}
+    - {x: 0.125, y: 0.875}
     - {x: 0.0625, y: 0.9375}
     - {x: 0.125, y: 0.9375}
-    - {x: 0.0625, y: 1}
-    - {x: 0.125, y: 1}
   _isSolid: 1
   _levels:
     topLevel:
-      HeightScale: 5
-      Scale: 0.001
-      Octaves: 8
-      HeightOffset: 14
-      Probability: 1
+      HeightScale: 0
+      Scale: 0
+      Octaves: 1
+      HeightOffset: 0
+      Probability: 0
     lowLevel:
       HeightScale: 0
       Scale: 0
-      Octaves: 0
-      HeightOffset: 1
+      Octaves: 1
+      HeightOffset: 0
       Probability: 1

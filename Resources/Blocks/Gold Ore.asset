@@ -12,20 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f308374b6a425b90032368165b2542, type: 3}
   m_Name: Gold Ore
   m_EditorClassIdentifier: 
-  _id: 0
-  _name: 
-  _sides: []
-  _isSolid: 0
+  _id: 42
+  _name: Gold Ore
+  _sides:
+  - side: 0
+    uv:
+    - {x: 0, y: 0.8125}
+    - {x: 0.0625, y: 0.8125}
+    - {x: 0, y: 0.875}
+    - {x: 0.0625, y: 0.875}
+  _isSolid: 1
   _levels:
     topLevel:
-      HeightScale: 0
-      Scale: 0
-      Octaves: 0
-      HeightOffset: 0
+      HeightScale: 1
+      Scale: 0.001
+      Octaves: 2
+      HeightOffset: 10
       Probability: 0
     lowLevel:
-      HeightScale: 0
-      Scale: 0
-      Octaves: 0
-      HeightOffset: 0
-      Probability: 0
+      HeightScale: 1
+      Scale: 0.001
+      Octaves: 2
+      HeightOffset: 5
+      Probability: 0.15

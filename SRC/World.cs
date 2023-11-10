@@ -9,22 +9,18 @@ using Utils;
 public class World : MonoBehaviour {
 
     [SerializeField] private GameObject _chunkPrefab;
+    [SerializeField] private PerlinSettings _caveSettings;
+
 
     private static Vector3 _worldDimensions = new(10, 10, 10);
     private static Vector3 _chunkDimensions = new(16, 16, 16);
     private static List<BlockDetails> _blocks = new();
-
-
-    [SerializeField] private PerlinSettings _surfaceSettings;
-    [SerializeField] private PerlinSettings _stoneSettings;
-
-    public PerlinSettings SurfaceSettings => _surfaceSettings;
-    public PerlinSettings StoneSettings => _stoneSettings;
-    public List<BlockDetails> Blocks => _blocks;
+    
+    public PerlinSettings CaveSettings => _caveSettings;
 
 
     private void Start() {
-        BlockDetails.GetItemByID(0); // Should change
+        BlockDetails.GetItemByID(0);
         StartCoroutine(BuildWorld());
     }
 
@@ -45,6 +41,7 @@ public class World : MonoBehaviour {
         _blocks.Add(details);
     }
 
+    
     public List<BlockDetails> BlocksByLayerIntersection(Vector3Int coordinate) { // BUG
         List<BlockDetails> toReturn = (from block in _blocks 
             let low = block.Layers.lowLevel 
@@ -54,6 +51,8 @@ public class World : MonoBehaviour {
             where lowValue <= coordinate.y && coordinate.y <= topValue select block).ToList();
         return toReturn;
     }
+    
+    
 }
 
 [Serializable]

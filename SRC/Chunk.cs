@@ -12,7 +12,7 @@ public class Chunk : MonoBehaviour {
 
     [SerializeField] private int _width = 16;
     [SerializeField] private int _depth = 16;
-    [SerializeField] private int _height = 42;
+    [SerializeField] private int _height = 16;
 
     private Block[,,] _blocks;
     private BlockDetails[] _blocksData;
@@ -23,24 +23,27 @@ public class Chunk : MonoBehaviour {
     public int Height => _height;
     public int Depth => _depth;
     public Vector3 Location => _location;
-
+    
     
     
     private void BuildChunk(World parent) {
         var blockCount = _width * _height * _depth;
         _blocksData = new BlockDetails[blockCount];
+        var airBlock = BlockDetails.GetItemByID(0);
         for (int i = 0; i < blockCount; i++) {
             int x = i % _width + (int)_location.x;
             int y = (i / _width) % _height + (int)_location.y;
             int z = i / (_width * _height) + (int)_location.z;
             var block = GenerateBlockByCoordinate(new Vector3Int(x, y, z), parent);
-            _blocksData[i] = block ? block : BlockDetails.GetItemByID(0);
+            var caveProb = (int)MeshUtils.fBM3D(x, y, z, parent.CaveSettings.Scale, parent.CaveSettings.HeightScale,
+                parent.CaveSettings.Octaves, parent.CaveSettings.HeightOffset);
+            if (ReferenceEquals(block, null) || caveProb < parent.CaveSettings.Probability && block.Name != PropertyConstant.BOTTOM_BLOCK) block = airBlock;
+            _blocksData[i] = block ? block : airBlock;
         }
     }
 
     private BlockDetails GenerateBlockByCoordinate(Vector3Int coord, World world) {
         var blocks = world.BlocksByLayerIntersection(coord);
-        print(blocks.Count);
         return blocks.FirstOrDefault(block => UnityEngine.Random.Range(0f, 1f) <= block.Layers.lowLevel.Probability);
     }
 

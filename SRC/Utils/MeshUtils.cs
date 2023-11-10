@@ -92,5 +92,16 @@ namespace Utils {
 
             return total + heightOffset;
         }
+
+        public static float fBM3D(float x, float y, float z, float scale, float heightScale, int octaves, float heightOffset) {
+            float XY = fBM(x, y, scale, heightScale, octaves, heightOffset);
+            float XZ = fBM(x, z, scale, heightScale, octaves, heightOffset);
+            float YX = fBM(y, x, scale, heightScale, octaves, heightOffset);
+            float YZ = fBM(y, z, scale, heightScale, octaves, heightOffset);
+            float ZX = fBM(z, x, scale, heightScale, octaves, heightOffset);
+            float ZY = fBM(z, y, scale, heightScale, octaves, heightOffset);
+
+            return (XY + XZ + YX + YZ + ZX + ZY) / 6f;
+        }
     }
 }

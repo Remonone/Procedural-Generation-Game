@@ -51,7 +51,7 @@ namespace DefaultNamespace {
     [Serializable]
     public sealed class Side {
         public MeshUtils.BlockSide side;
-        public List<Vector2> uv = new List<Vector2>(4);
+        public List<Vector2> uv = new(4);
     }
 
     [Serializable]

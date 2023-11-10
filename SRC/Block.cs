@@ -20,9 +20,10 @@ public class Block {
         if (type is MeshUtils.BlockType.AIR) return;
         List<Quad> quads = new();
         _parentChunk = chunk;
+        var localPosition = offset - chunk.Location;
         for (var i = 0; i < 6; i++) {
             var neigbors = _neighbors[i];
-            if(IsTransparentNeighbor((int)offset.x + neigbors.Item1, (int)offset.y + neigbors.Item2, (int)offset.z + neigbors.Item3))
+            if(IsTransparentNeighbor((int)localPosition.x + neigbors.Item1, (int)localPosition.y + neigbors.Item2, (int)localPosition.z + neigbors.Item3))
                 quads.Add(new Quad((MeshUtils.BlockSide)i, offset, type));
         }
 

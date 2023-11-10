@@ -10,6 +10,7 @@ namespace DefaultNamespace {
         [SerializeField] private string _name;
         [SerializeField] private List<Side> _sides  = new(6);
         [SerializeField] private bool _isSolid;
+        [SerializeField] private GenerationLevel _levels = null;
 
         private static Dictionary<int, BlockDetails> _blockStore;
 
@@ -17,6 +18,7 @@ namespace DefaultNamespace {
         public string Name => _name;
         public List<Side> Sides => _sides;
         public bool IsSolid => _isSolid;
+        public GenerationLevel Layers => _levels;
 
         public static BlockDetails GetItemByID(int id) {
             if (_blockStore == null) {
@@ -35,7 +37,14 @@ namespace DefaultNamespace {
                     continue;
                 }
                 _blockStore[block.ID] = block;
+
+                InitBlock(block);
             }
+        }
+
+        private static void InitBlock(BlockDetails details) {
+            World.RegisterBlock(details);
+            
         }
     }
 
@@ -43,5 +52,11 @@ namespace DefaultNamespace {
     public sealed class Side {
         public MeshUtils.BlockSide side;
         public List<Vector2> uv = new List<Vector2>(4);
+    }
+
+    [Serializable]
+    public sealed class GenerationLevel {
+        public PerlinSettings topLevel;
+        public PerlinSettings lowLevel;
     }
 }

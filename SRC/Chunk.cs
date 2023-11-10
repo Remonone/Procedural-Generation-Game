@@ -2,6 +2,7 @@
 using Unity.Jobs;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
+using System.Linq;
 using DefaultNamespace;
 using UnityEngine;
 using Utils;
@@ -32,14 +33,16 @@ public class Chunk : MonoBehaviour {
             int x = i % _width + (int)_location.x;
             int y = (i / _width) % _height + (int)_location.y;
             int z = i / (_width * _height) + (int)_location.z;
-            int surfaceHeight = (int)MeshUtils.fBM(x, z, 
-                parent.SurfaceSettings.Scale, parent.SurfaceSettings.HeightScale, 
-                parent.SurfaceSettings.Octaves, -parent.SurfaceSettings.HeightOffset);
-            _blocksData[i] = surfaceHeight > y ? BlockDetails.GetItemByID(1) :
-                surfaceHeight == y ? BlockDetails.GetItemByID(2) : BlockDetails.GetItemByID(0);
+            var block = GenerateBlockByCoordinate(new Vector3Int(x, y, z), parent);
+            _blocksData[i] = block ? block : BlockDetails.GetItemByID(0);
         }
     }
 
+    private BlockDetails GenerateBlockByCoordinate(Vector3Int coord, World world) {
+        var blocks = world.BlocksByLayerIntersection(coord);
+        print(blocks.Count);
+        return blocks.FirstOrDefault(block => UnityEngine.Random.Range(0f, 1f) <= block.Layers.lowLevel.Probability);
+    }
 
     public void CreateChunk(Vector3 dimension, Vector3 position, World parent) {
         _location = position;

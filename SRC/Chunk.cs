@@ -2,6 +2,7 @@
 using Unity.Jobs;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 using Utils;
 
@@ -11,18 +12,12 @@ public class Chunk : MonoBehaviour {
     [SerializeField] private int _width = 16;
     [SerializeField] private int _depth = 16;
     [SerializeField] private int _height = 42;
-    
-    [Header("Perlin Settings")] 
-    [SerializeField] private float _heightScale = 10;
-    [SerializeField] private float _scale = 0.001f;
-    [SerializeField] private int _octaves = 8;
-    [SerializeField] private float _heightOffset = -33;
-    
+
     private Block[,,] _blocks;
-    private MeshUtils.BlockType[] _blocksData;
+    private BlockDetails[] _blocksData;
     private Vector3 _location;
 
-    public MeshUtils.BlockType[] BlockData => _blocksData;
+    public BlockDetails[] BlockData => _blocksData;
     public int Width => _width;
     public int Height => _height;
     public int Depth => _depth;
@@ -30,19 +25,23 @@ public class Chunk : MonoBehaviour {
 
     
     
-    private void BuildChunk() {
+    private void BuildChunk(World parent) {
         var blockCount = _width * _height * _depth;
-        _blocksData = new MeshUtils.BlockType[blockCount];
+        _blocksData = new BlockDetails[blockCount];
         for (int i = 0; i < blockCount; i++) {
             int x = i % _width + (int)_location.x;
             int y = (i / _width) % _height + (int)_location.y;
             int z = i / (_width * _height) + (int)_location.z;
-            _blocksData[i] = MeshUtils.fBM(x, z, _scale, _heightScale, _octaves, -_heightOffset) > y ? MeshUtils.BlockType.DIRT : MeshUtils.BlockType.AIR;
+            int surfaceHeight = (int)MeshUtils.fBM(x, z, 
+                parent.SurfaceSettings.Scale, parent.SurfaceSettings.HeightScale, 
+                parent.SurfaceSettings.Octaves, -parent.SurfaceSettings.HeightOffset);
+            _blocksData[i] = surfaceHeight > y ? BlockDetails.GetItemByID(1) :
+                surfaceHeight == y ? BlockDetails.GetItemByID(2) : BlockDetails.GetItemByID(0);
         }
     }
 
 
-    public void CreateChunk(Vector3 dimension, Vector3 position) {
+    public void CreateChunk(Vector3 dimension, Vector3 position, World parent) {
         _location = position;
         _width = (int)dimension.x;
         _height = (int)dimension.y;
@@ -55,7 +54,7 @@ public class Chunk : MonoBehaviour {
         mr.material = _atlas;
         _blocks = new Block[_width, _height, _depth];
         
-        BuildChunk();
+        BuildChunk(parent);
 
         var inputMeshes = new List<Mesh>();
         int vertexStart = 0;

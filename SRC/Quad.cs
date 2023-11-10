@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DefaultNamespace;
 using UnityEngine;
 using Utils;
 
@@ -9,23 +10,17 @@ public class Quad {
 
     public Mesh Mesh => _mesh;
 
-    public Quad(MeshUtils.BlockSide side, Vector3 offset, MeshUtils.BlockType type) {
+    public Quad(MeshUtils.BlockSide side, Vector3 offset, Side details) {
         _mesh = new Mesh { name = "Custom Quad" };
         _mesh.vertices = _sides[side].vertices.Select(vertex => vertex + offset).ToArray();
         _mesh.normals = _sides[side].normals;
-        _mesh.uv = new []{MeshUtils.blockUVs[(int)type, 3], MeshUtils.blockUVs[(int)type, 2], MeshUtils.blockUVs[(int)type, 0], MeshUtils.blockUVs[(int)type, 1]};
+        _mesh.uv = new []{details.uv[3], details.uv[2], details.uv[0], details.uv[1]};
         _mesh.triangles = _sides[side].triangles;
 
         _mesh.RecalculateBounds();
         
     }
     
-    private static Dictionary<string, Vector2> _uvs = new() {
-        {"uv00", new Vector2(0.125f, 0.9375f)},
-        {"uv01", new Vector2(0.1875f, 0.9375f)},
-        {"uv10", new Vector2(0.125f, 1.0f)},
-        {"uv11", new Vector2(0.1875f, 1.0f)}
-    };
     
     private static Dictionary<MeshUtils.BlockSide, (Vector3[] vertices, Vector3[] normals, int[] triangles)> _sides = new() {
             {

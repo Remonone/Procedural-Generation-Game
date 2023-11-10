@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DefaultNamespace;
 using UnityEngine;
 using Utils;
 
@@ -11,20 +12,24 @@ public class Block {
 
     public Mesh Mesh => _mesh;
 
-    private static List<(int, int, int)> _neighbors = new() { // Try to get rid from dependency here...
-        (0, -1, 0), (0, 1, 0), (1, 0, 0), (-1, 0, 0), (0, 0, 1), (0, 0, -1)
+    private static List<Vector3> _neighbors = new() { // Try to get rid from dependency here...
+        Vector3.down, Vector3.up, Vector3.right, Vector3.left, Vector3.forward, Vector3.back
     };
     
     
-    public Block(Vector3 offset, MeshUtils.BlockType type, Chunk chunk) {
-        if (type is MeshUtils.BlockType.AIR) return;
+    public Block(Vector3 offset, BlockDetails block, Chunk chunk) {
+        if (block.ID == 0) return;
         List<Quad> quads = new();
         _parentChunk = chunk;
         var localPosition = offset - chunk.Location;
+        var defaultSide = block.Sides[0];
         for (var i = 0; i < 6; i++) {
-            var neigbors = _neighbors[i];
-            if(IsTransparentNeighbor((int)localPosition.x + neigbors.Item1, (int)localPosition.y + neigbors.Item2, (int)localPosition.z + neigbors.Item3))
-                quads.Add(new Quad((MeshUtils.BlockSide)i, offset, type));
+            var operateSide = block.Sides.SingleOrDefault(details => details.side == (MeshUtils.BlockSide)i);
+            operateSide ??= defaultSide;
+            var neighbor = _neighbors[i];
+            if(IsSolidBlock(localPosition + neighbor)) continue;
+            
+            quads.Add(new Quad((MeshUtils.BlockSide)i, offset, operateSide));
         }
 
         if (quads.Count < 1) return;
@@ -32,12 +37,14 @@ public class Block {
         _mesh = MeshUtils.MergeMeshes(quads.Select(quad => quad.Mesh).ToArray());
     }
 
-    public bool IsTransparentNeighbor(int x, int y, int z) {
+    private bool IsSolidBlock(Vector3 pos) {
+        var x = (int)pos.x;
+        var y = (int)pos.y;
+        var z = (int)pos.z;
         if (x < 0 || x >= _parentChunk.Width || y < 0 || y >= _parentChunk.Height || z < 0 ||
-            z >= _parentChunk.Depth) return true;
+            z >= _parentChunk.Depth) return false;
         
-        var block = _parentChunk.BlockData[x + _parentChunk.Width * (y + _parentChunk.Depth * z)];
-        return block is MeshUtils.BlockType.AIR or MeshUtils.BlockType.WATER;
+        return _parentChunk.BlockData[x + _parentChunk.Width * (y + _parentChunk.Depth * z)].IsSolid;
     }
 
 }

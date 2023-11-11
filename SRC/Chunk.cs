@@ -16,13 +16,15 @@ public class Chunk : MonoBehaviour {
 
     private Block[,,] _blocks;
     private BlockDetails[] _blocksData;
-    private Vector3 _location;
+    private Vector3Int _location;
+    private MeshRenderer _renderer;
 
     public BlockDetails[] BlockData => _blocksData;
     public int Width => _width;
     public int Height => _height;
     public int Depth => _depth;
     public Vector3 Location => _location;
+    public MeshRenderer Renderer => _renderer;
     
     
     
@@ -31,33 +33,30 @@ public class Chunk : MonoBehaviour {
         _blocksData = new BlockDetails[blockCount];
         var airBlock = BlockDetails.GetItemByID(0);
         for (int i = 0; i < blockCount; i++) {
-            int x = i % _width + (int)_location.x;
-            int y = (i / _width) % _height + (int)_location.y;
-            int z = i / (_width * _height) + (int)_location.z;
-            var block = GenerateBlockByCoordinate(new Vector3Int(x, y, z), parent);
-            var caveProb = (int)MeshUtils.fBM3D(x, y, z, parent.CaveSettings.Scale, parent.CaveSettings.HeightScale,
+            int x = i % _width + _location.x;
+            int y = (i / _width) % _height + _location.y;
+            int z = i / (_width * _height) + _location.z;
+            var block = parent.GenerateBlockByCoordinate(new Vector3Int(x, y, z));
+            var caveProb = MeshUtils.fBM3D(x, y, z, parent.CaveSettings.Scale, parent.CaveSettings.HeightScale,
                 parent.CaveSettings.Octaves, parent.CaveSettings.HeightOffset);
-            if (ReferenceEquals(block, null) || caveProb < parent.CaveSettings.Probability && block.Name != PropertyConstant.BOTTOM_BLOCK) block = airBlock;
+            if (ReferenceEquals(block, null) || caveProb >= parent.CaveSettings.Probability && block.Name != PropertyConstant.BOTTOM_BLOCK) block = airBlock;
             _blocksData[i] = block ? block : airBlock;
         }
     }
 
-    private BlockDetails GenerateBlockByCoordinate(Vector3Int coord, World world) {
-        var blocks = world.BlocksByLayerIntersection(coord);
-        return blocks.FirstOrDefault(block => UnityEngine.Random.Range(0f, 1f) <= block.Layers.lowLevel.Probability);
-    }
+    
 
-    public void CreateChunk(Vector3 dimension, Vector3 position, World parent) {
+    public void CreateChunk(Vector3Int dimension, Vector3Int position, World parent) {
         _location = position;
-        _width = (int)dimension.x;
-        _height = (int)dimension.y;
-        _depth = (int)dimension.z;
+        _width = dimension.x;
+        _height = dimension.y;
+        _depth = dimension.z;
         
         MeshFilter mf = gameObject.AddComponent<MeshFilter>();
-        MeshRenderer mr = gameObject.AddComponent<MeshRenderer>();
+        _renderer = gameObject.AddComponent<MeshRenderer>();
         MeshCollider mc = gameObject.AddComponent<MeshCollider>();
 
-        mr.material = _atlas;
+        _renderer.material = _atlas;
         _blocks = new Block[_width, _height, _depth];
         
         BuildChunk(parent);

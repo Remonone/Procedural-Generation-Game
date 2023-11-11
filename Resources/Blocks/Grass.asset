@@ -33,4 +33,17 @@ MonoBehaviour:
     - {x: 0.1875, y: 0.375}
     - {x: 0.125, y: 0.4375}
     - {x: 0.1875, y: 0.4375}
-  _isSolid: 0
+  _isSolid: 1
+  _levels:
+    topLevel:
+      HeightScale: 5
+      Scale: 0.001
+      Octaves: 8
+      HeightOffset: 19
+      Probability: 1
+    lowLevel:
+      HeightScale: 5
+      Scale: 0.001
+      Octaves: 8
+      HeightOffset: 18
+      Probability: 1

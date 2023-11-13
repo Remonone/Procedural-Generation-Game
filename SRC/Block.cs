@@ -43,8 +43,7 @@ public class Block {
         var z = (int)pos.z;
         if (x < 0 || x >= _parentChunk.Width || y < 0 || y >= _parentChunk.Height || z < 0 ||
             z >= _parentChunk.Depth) return false;
-        
-        return _parentChunk.BlockData[x + _parentChunk.Width * (y + _parentChunk.Depth * z)].IsSolid;
+        return BlockDetails.GetItemByID(_parentChunk.BlockData[x + _parentChunk.Width * (y + _parentChunk.Depth * z)]).IsSolid;
     }
 
 }

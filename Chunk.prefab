@@ -47,8 +47,4 @@ MonoBehaviour:
   _atlas: {fileID: 2100000, guid: ba1f790febaac4b44991e1309344bcef, type: 2}
   _width: 16
   _depth: 16
-  _height: 16
-  _heightScale: 10
-  _scale: 0.001
-  _octaves: 8
-  _heightOffset: -18
+  _height: 130

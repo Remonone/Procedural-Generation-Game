@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.Profiling;
 using Utils;
 
 public class World : MonoBehaviour {
@@ -15,17 +16,16 @@ public class World : MonoBehaviour {
     [SerializeField] private int _renderDistance = 4;
 
 
-    private static Vector3Int _worldDimensions = new(5, 5, 5);
+    private static Vector3Int _worldDimensions = new(10, 5, 10);
     private static Vector3Int _chunkDimensions = new(16, 16, 16);
-    private static List<BlockDetails> _blocks = new();
-    private static WaitForSeconds _wfs = new WaitForSeconds(.3f);
+    private static Dictionary<int, BlockDetails> _blocks = new();
+    private static WaitForSeconds _wfs = new(.3f);
     
     public PerlinSettings CaveSettings => _caveSettings;
-
+    
     private HashSet<Vector3Int> _chunkChecker = new();
     private HashSet<Vector2Int> _chunkColumns = new();
     private Dictionary<Vector3Int, Chunk> _chunks = new();
-    private bool _isLoaded = false;
 
     private Vector3Int _lastBuildPosition;
 
@@ -46,32 +46,20 @@ public class World : MonoBehaviour {
         }
     }
 
-    // private IEnumerator UpdateWorld() {
-    //     while (true) {
-    //         var playerPos = _player.transform.position;
-    //         if ((_lastBuildPosition - playerPos).magnitude > _chunkDimensions.x) {
-    //             _lastBuildPosition = Vector3Int.CeilToInt(playerPos);
-    //             int posX = (int)(playerPos.x / _chunkDimensions.x) * _chunkDimensions.x;
-    //             int posZ = (int)(playerPos.z / _chunkDimensions.z) * _chunkDimensions.z;
-    //             _buildQueue.Enqueue(BuildRecursiveWorld(posX, posZ, _renderDistance));
-    //             _buildQueue.Enqueue(HideColumns(posX, posZ));
-    //         }
-    //
-    //         yield return null;
-    //     }
-    // }
-
-    private void Update() {
-        if (!_isLoaded) return;
-        var playerPos = _player.transform.position;
-        if ((_lastBuildPosition - playerPos).magnitude > _chunkDimensions.x) {
-            _lastBuildPosition = Vector3Int.CeilToInt(playerPos);
-            int posX = (int)(playerPos.x / _chunkDimensions.x) * _chunkDimensions.x;
-            int posZ = (int)(playerPos.z / _chunkDimensions.z) * _chunkDimensions.z;
-            _buildQueue.Enqueue(BuildRecursiveWorld(posX, posZ, _renderDistance));
-            _buildQueue.Enqueue(HideColumns(posX, posZ));
+    private IEnumerator UpdateWorld() {
+        while (true) {
+            var playerPos = _player.transform.position;
+            if ((_lastBuildPosition - playerPos).magnitude > _chunkDimensions.x) {
+                _lastBuildPosition = Vector3Int.CeilToInt(playerPos);
+                int posX = (int)(playerPos.x / _chunkDimensions.x) * _chunkDimensions.x;
+                int posZ = (int)(playerPos.z / _chunkDimensions.z) * _chunkDimensions.z;
+                _buildQueue.Enqueue(BuildRecursiveWorld(posX, posZ, _renderDistance));
+                _buildQueue.Enqueue(HideColumns(posX, posZ));
+            }
+            yield return _wfs;
         }
     }
+
 
     private IEnumerator BuildRecursiveWorld(int x, int z, int r) {
         int nextrad = r - 1;
@@ -142,17 +130,19 @@ public class World : MonoBehaviour {
         _lastBuildPosition = Vector3Int.CeilToInt(_player.transform.position);
 
         StartCoroutine(BuildCoordinator());
-        _isLoaded = true;
-        // StartCoroutine(UpdateWorld());
+        StartCoroutine(UpdateWorld());
     }
 
-    public static void RegisterBlock(BlockDetails details) {
-        _blocks.Add(details);
+    public static void RegisterBlock(int id, BlockDetails details) {
+        _blocks.Add(id, details);
     }
     
     public BlockDetails GenerateBlockByCoordinate(Vector3Int coord) {
         var blocks = BlocksByLayerIntersection(coord);
-        return blocks.FirstOrDefault(block => UnityEngine.Random.Range(0f, 1f) <= block.Layers.lowLevel.Probability);
+        var block = blocks.FirstOrDefault(
+            block => UnityEngine.Random.Range(0f, 1f) <= block.Layers.lowLevel.Probability);
+        block ??= BlockDetails.GetItemByID(0);
+        return block;
     }
     
     public int GetHighestPointByPosition(int x, int z) {
@@ -167,7 +157,7 @@ public class World : MonoBehaviour {
 
     
     public List<BlockDetails> BlocksByLayerIntersection(Vector3Int coordinate) {
-        List<BlockDetails> toReturn = (from block in _blocks 
+        List<BlockDetails> toReturn = (from block in _blocks.Values 
             let low = block.Layers.lowLevel 
             let high = block.Layers.topLevel 
             let lowValue = MeshUtils.fBM(coordinate.x, coordinate.z, low.Scale, low.HeightScale, low.Octaves, low.HeightOffset) 
@@ -175,6 +165,7 @@ public class World : MonoBehaviour {
             where lowValue <= coordinate.y && coordinate.y <= topValue select block).ToList();
         return toReturn;
     }
+
     
     
 }

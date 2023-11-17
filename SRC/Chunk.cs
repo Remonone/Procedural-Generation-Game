@@ -19,6 +19,7 @@ public class Chunk : MonoBehaviour {
     private int[] _blocksData;
     private Vector3Int _location;
     private MeshRenderer _renderer;
+    private World _parentWorld;
 
     public int[] BlockData => _blocksData;
     public int Width => _width;
@@ -59,15 +60,19 @@ public class Chunk : MonoBehaviour {
         _width = dimension.x;
         _height = dimension.y;
         _depth = dimension.z;
+        _parentWorld = parent;
         
-        MeshFilter mf = gameObject.AddComponent<MeshFilter>();
-        _renderer = gameObject.AddComponent<MeshRenderer>();
-        MeshCollider mc = gameObject.AddComponent<MeshCollider>();
-
-        _renderer.material = _atlas;
         _blocks = new Block[_width, _height, _depth];
         BuildChunk(parent);
 
+        RenderChunk();
+    }
+
+    private void RenderChunk() {
+        MeshFilter mf = gameObject.AddComponent<MeshFilter>();
+        _renderer = gameObject.AddComponent<MeshRenderer>();
+        _renderer.material = _atlas;
+        MeshCollider mc = gameObject.AddComponent<MeshCollider>();
         var inputMeshes = new List<Mesh>();
         int vertexStart = 0;
         int triangleStart = 0;
@@ -121,5 +126,20 @@ public class Chunk : MonoBehaviour {
 
         mf.mesh = newMesh;
         mc.sharedMesh = newMesh;
+    }
+
+    public void SetBlocks((Vector3Int position, int id)[] blocks) {
+        var mf = gameObject.GetComponent<MeshFilter>();
+        var mr = gameObject.GetComponent<MeshRenderer>();
+        var mc = gameObject.GetComponent<MeshCollider>();
+        DestroyImmediate(mf);
+        DestroyImmediate(mr);
+        DestroyImmediate(mc);
+        foreach(var block in blocks) {
+            int index = block.position.x + _width * (block.position.y + _depth * block.position.z);
+            _blocksData[index] = block.id;
+        }
+        
+        RenderChunk();
     }
 }

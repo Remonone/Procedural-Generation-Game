@@ -16,8 +16,9 @@ public class World : MonoBehaviour {
     [SerializeField] private int _renderDistance = 4;
 
 
-    private static Vector3Int _worldDimensions = new(10, 5, 10);
+    private static Vector3Int _worldDimensions = new(5, 5, 5);
     private static Vector3Int _chunkDimensions = new(16, 16, 16);
+    
     private static Dictionary<int, BlockDetails> _blocks = new();
     private static WaitForSeconds _wfs = new(.3f);
     

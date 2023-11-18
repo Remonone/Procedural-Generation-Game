@@ -1,0 +1,27 @@
+.selection-bar {
+    background-color: rgb(99, 99, 99);
+    flex-direction: row;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 0;
+}
+
+.selection-button {
+    background-color: rgba(255, 255, 255, 0);
+    border-width: 8px;
+    padding: 0;
+    margin: 0;
+    border-color: rgb(132, 132, 132);
+    width: 85px;
+    height: 85px;
+}
+
+.selection-button_selected {
+    border-width: 10px;
+    border-left-color: rgb(207, 207, 207);
+    border-right-color: rgb(207, 207, 207);
+    border-top-color: rgb(207, 207, 207);
+    border-bottom-color: rgb(207, 207, 207);
+    scale: 1 1;
+    z-index: 5;
+}

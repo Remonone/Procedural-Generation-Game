@@ -23,12 +23,12 @@ public struct CalculateBlockTypes : IJobParallelFor {
                 random = new Unity.Mathematics.Random(2);
                 int ID = 0;
                 foreach (var block in dataChunks) {
-                        PerlinSettings bottom = block.Bottom;
-                        PerlinSettings top = block.Top;
+                        PerlinSettings bottom = block.bottom;
+                        PerlinSettings top = block.top;
                         float lowValue = MeshUtils.fBM(x, z, bottom.Scale, bottom.HeightScale, bottom.Octaves, bottom.HeightOffset);
                         float topValue = MeshUtils.fBM(x, z, top.Scale, top.HeightScale, top.Octaves, top.HeightOffset);
                         if (lowValue <= y && y <= topValue && random.NextFloat(0f, 1f) <= bottom.Probability) {
-                                ID = block.ID;
+                                ID = block.id;
                                 break;
                         }
                 }

@@ -11,7 +11,8 @@ public class BlockDetails : ScriptableObject {
     [SerializeField] private string _name;
     [SerializeField] private List<Side> _sides  = new(6);
     [SerializeField] private bool _isSolid;
-    [SerializeField] private GenerationLevel _levels = null;
+    [SerializeField] private GenerationLevel _levels;
+    [SerializeField] private Sprite _sprite;
 
     private static Dictionary<int, BlockDetails> _blockStore;
     private static Dictionary<int, BlockDataChunk> _dataChunks;
@@ -22,6 +23,7 @@ public class BlockDetails : ScriptableObject {
     public bool IsSolid => _isSolid;
     public GenerationLevel Layers => _levels;
     public static BlockDataChunk[] DataChunks => _dataChunks.Values.ToArray();
+    public Sprite Sprite => _sprite;
 
     public static BlockDetails GetItemByID(int id) {
         if (_blockStore == null) {
@@ -37,7 +39,7 @@ public class BlockDetails : ScriptableObject {
         var itemList = Resources.LoadAll<BlockDetails>("Blocks");
         foreach (var block in itemList) {
             if (_blockStore.ContainsKey(block.ID)) {
-                Debug.LogError(string.Format("There's a duplicate for blcoks: {0} and {1}", _blockStore[block.ID], block));
+                Debug.LogError($"There's a duplicate for blocks: {_blockStore[block.ID]} and {block}");
                 continue;
             }
             _blockStore[block.ID] = block;
@@ -50,15 +52,15 @@ public class BlockDetails : ScriptableObject {
         World.RegisterBlock(details.ID, details);
         _dataChunks.Add(details.ID,
             new BlockDataChunk {
-                Bottom = details._levels.lowLevel,
-                Top = details._levels.topLevel, ID = details._id
+                bottom = details._levels.lowLevel,
+                top = details._levels.topLevel, id = details._id
             });
     }
 
     public struct BlockDataChunk {
-        public int ID;
-        public PerlinSettings Top;
-        public PerlinSettings Bottom;
+        public int id;
+        public PerlinSettings top;
+        public PerlinSettings bottom;
     }
 }
 

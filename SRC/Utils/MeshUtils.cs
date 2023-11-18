@@ -25,9 +25,7 @@ namespace Utils {
                     pIndex++;
                 }
 
-                for (int t = 0; t < meshes[i].triangles.Length; t++) {
-                    int trianglePoint = meshes[i].triangles[t];
-                    
+                foreach (var trianglePoint in meshes[i].triangles) {
                     Vector3 v = meshes[i].vertices[trianglePoint];
                     Vector3 n = meshes[i].normals[trianglePoint];
                     Vector2 u = meshes[i].uv[trianglePoint];
@@ -45,7 +43,7 @@ namespace Utils {
             return mesh;
         }
 
-        public static void ExtractArrays(Dictionary<VertexData, int> list, Mesh mesh) {
+        private static void ExtractArrays(Dictionary<VertexData, int> list, Mesh mesh) {
             List<Vector3> vertices = new List<Vector3>();
             List<Vector3> normals = new List<Vector3>();
             List<Vector2> uvs = new List<Vector2>();
@@ -70,7 +68,7 @@ namespace Utils {
             BACK = 5
         }
 
-        public static Dictionary<string, Vector3> Vertices = new() {
+        public static readonly Dictionary<string, Vector3> Vertices = new() {
             { "p0", new Vector3(-0.5f, -0.5f, 0.5f) },
             { "p1", new Vector3(0.5f, -0.5f, 0.5f) },
             { "p2", new Vector3(0.5f, -0.5f, -0.5f) },
@@ -94,14 +92,14 @@ namespace Utils {
         }
 
         public static float fBM3D(float x, float y, float z, float scale, float heightScale, int octaves, float heightOffset) {
-            float XY = fBM(x, y, scale, heightScale, octaves, heightOffset);
-            float XZ = fBM(x, z, scale, heightScale, octaves, heightOffset);
-            float YX = fBM(y, x, scale, heightScale, octaves, heightOffset);
-            float YZ = fBM(y, z, scale, heightScale, octaves, heightOffset);
-            float ZX = fBM(z, x, scale, heightScale, octaves, heightOffset);
-            float ZY = fBM(z, y, scale, heightScale, octaves, heightOffset);
+            float xy = fBM(x, y, scale, heightScale, octaves, heightOffset);
+            float xz = fBM(x, z, scale, heightScale, octaves, heightOffset);
+            float yx = fBM(y, x, scale, heightScale, octaves, heightOffset);
+            float yz = fBM(y, z, scale, heightScale, octaves, heightOffset);
+            float zx = fBM(z, x, scale, heightScale, octaves, heightOffset);
+            float zy = fBM(z, y, scale, heightScale, octaves, heightOffset);
 
-            return (XY + XZ + YX + YZ + ZX + ZY) / 6f;
+            return (xy + xz + yx + yz + zx + zy) / 6f;
         }
     }
 }

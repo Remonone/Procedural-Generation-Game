@@ -1,23 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
-using DefaultNamespace;
 using UnityEngine;
 using Utils;
 
 public class Quad {
 
-    private Mesh _mesh;
-
-    public Mesh Mesh => _mesh;
+    public Mesh Mesh { get; }
 
     public Quad(MeshUtils.BlockSide side, Vector3 offset, Side details) {
-        _mesh = new Mesh { name = "Custom Quad" };
-        _mesh.vertices = _sides[side].vertices.Select(vertex => vertex + offset).ToArray();
-        _mesh.normals = _sides[side].normals;
-        _mesh.uv = new []{details.uv[3], details.uv[2], details.uv[0], details.uv[1]};
-        _mesh.triangles = _sides[side].triangles;
+        Mesh = new Mesh {
+            name = "Custom Quad",
+            vertices = _sides[side].vertices.Select(vertex => vertex + offset).ToArray(),
+            normals = _sides[side].normals,
+            uv = new []{details.uv[3], details.uv[2], details.uv[0], details.uv[1]},
+            triangles = _sides[side].triangles
+        };
 
-        _mesh.RecalculateBounds();
+        Mesh.RecalculateBounds();
         
     }
     

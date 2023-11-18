@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using DefaultNamespace;
 using UnityEngine;
 using Utils;
 
 public class Block {
 
-    private Mesh _mesh;
-    private Chunk _parentChunk;
+    private readonly Chunk _parentChunk;
+    public Mesh Mesh { get; }
 
-    public Mesh Mesh => _mesh;
-
-    private static List<Vector3> _neighbors = new() { // Try to get rid from dependency here...
+    private static readonly List<Vector3> Neighbors = new() { // Try to get rid from dependency here...
         Vector3.down, Vector3.up, Vector3.right, Vector3.left, Vector3.forward, Vector3.back
     };
     
@@ -26,7 +22,7 @@ public class Block {
         for (var i = 0; i < 6; i++) {
             var operateSide = block.Sides.SingleOrDefault(details => details.side == (MeshUtils.BlockSide)i);
             operateSide ??= defaultSide;
-            var neighbor = _neighbors[i];
+            var neighbor = Neighbors[i];
             if(IsSolidBlock(localPosition + neighbor)) continue;
             
             quads.Add(new Quad((MeshUtils.BlockSide)i, offset, operateSide));
@@ -34,7 +30,7 @@ public class Block {
 
         if (quads.Count < 1) return;
 
-        _mesh = MeshUtils.MergeMeshes(quads.Select(quad => quad.Mesh).ToArray());
+        Mesh = MeshUtils.MergeMeshes(quads.Select(quad => quad.Mesh).ToArray());
     }
 
     private bool IsSolidBlock(Vector3 pos) {

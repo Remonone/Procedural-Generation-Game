@@ -2,11 +2,7 @@
 using Unity.Jobs;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
-using System.Linq;
-using DefaultNamespace;
 using UnityEngine;
-using UnityEngine.Profiling;
-using Utils;
 
 public class Chunk : MonoBehaviour {
     [SerializeField] private Material _atlas;
@@ -19,7 +15,6 @@ public class Chunk : MonoBehaviour {
     private int[] _blocksData;
     private Vector3Int _location;
     private MeshRenderer _renderer;
-    private World _parentWorld;
 
     public int[] BlockData => _blocksData;
     public int Width => _width;
@@ -60,7 +55,6 @@ public class Chunk : MonoBehaviour {
         _width = dimension.x;
         _height = dimension.y;
         _depth = dimension.z;
-        _parentWorld = parent;
         
         _blocks = new Block[_width, _height, _depth];
         BuildChunk(parent);
@@ -78,22 +72,22 @@ public class Chunk : MonoBehaviour {
         int triangleStart = 0;
         int meshCount = _width * _height * _depth;
         int m = 0;
-        var jobs = new ProcessMeshDataJob();
-        // TEMP -> TEMPJOB
-        jobs.vertexStart = new NativeArray<int>(meshCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
-        jobs.triangleStart = new NativeArray<int>(meshCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
+        var jobs = new ProcessMeshDataJob {
+            vertexStart = new NativeArray<int>(meshCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory),
+            triangleStart = new NativeArray<int>(meshCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory)
+        };
         for (int x = 0; x < _width; x++) {
             for (int y = 0; y < _height; y++) {
                 for (int z = 0; z < _depth; z++) {
                     _blocks[x, y, z] = new Block(new Vector3(x, y, z) + _location, BlockDetails.GetItemByID(_blocksData[x + _width * (y + _depth * z)]), this);
                     if (ReferenceEquals(_blocks[x, y, z].Mesh, null)) continue;
                     inputMeshes.Add(_blocks[x, y, z].Mesh);
-                    var vcount = _blocks[x, y, z].Mesh.vertexCount;
-                    var icount = (int)_blocks[x, y, z].Mesh.GetIndexCount(0);
+                    var vCount = _blocks[x, y, z].Mesh.vertexCount;
+                    var triCount = (int)_blocks[x, y, z].Mesh.GetIndexCount(0);
                     jobs.vertexStart[m] = vertexStart;
                     jobs.triangleStart[m] = triangleStart;
-                    vertexStart += vcount;
-                    triangleStart += icount;
+                    vertexStart += vCount;
+                    triangleStart += triCount;
                     m++;
                 }
             }
@@ -107,12 +101,14 @@ public class Chunk : MonoBehaviour {
             new VertexAttributeDescriptor(VertexAttribute.Normal, stream: 1),
             new VertexAttributeDescriptor(VertexAttribute.TexCoord0, stream: 2));
         var handle = jobs.Schedule(inputMeshes.Count, 4);
-        var newMesh = new Mesh();
-        newMesh.name = "Chunk_" + _location.x + "_" + _location.y + "_" + _location.z; 
-        var sm = new SubMeshDescriptor(0, triangleStart, MeshTopology.Triangles);
-        sm.firstVertex = 0;
-        sm.vertexCount = vertexStart;
-        
+        var newMesh = new Mesh {
+            name = "Chunk_" + _location.x + "_" + _location.y + "_" + _location.z
+        };
+        var sm = new SubMeshDescriptor(0, triangleStart) {
+            firstVertex = 0,
+            vertexCount = vertexStart
+        };
+
         handle.Complete();
 
         jobs.outputMesh.subMeshCount = 1;

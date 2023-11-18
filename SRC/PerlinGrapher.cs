@@ -1,11 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Utils;
 
 [ExecuteAlways]
 public class PerlinGrapher : MonoBehaviour {
 
-    private Vector3 _dimensions = new(10, 10, 10);
+    private readonly Vector3 _dimensions = new(10, 10, 10);
     [SerializeField] private float heightScale = 2f;
     [Range(0.0f, 1.0f)]
     [SerializeField] private float scale = .5f;

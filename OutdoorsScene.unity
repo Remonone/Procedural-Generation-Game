@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2174.508, g: 2293.133, b: 3368.2896, a: 1}
+  m_IndirectSpecularColor: {r: 2172.6907, g: 2288.6233, b: 3355.727, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -682,7 +682,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 813501846}
   m_SourcePrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
 --- !u!1 &689630631
 GameObject:
@@ -745,6 +749,57 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 596486413}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &813501846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 813501840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b638b80be3e13dc4785d0641fee0d5c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hitDistance: 4
+  _map:
+    m_Name: Map
+    m_Id: ce814b59-c02b-41b1-b184-1a87d4104323
+    m_Asset: {fileID: 0}
+    m_Actions:
+    - m_Name: Attack
+      m_Type: 1
+      m_ExpectedControlType: Button
+      m_Id: ac7195cd-d2ee-419f-9361-98d65015c205
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    - m_Name: Position
+      m_Type: 0
+      m_ExpectedControlType: Vector2
+      m_Id: 71fa5f79-b7d8-4837-b790-9196f48d3a38
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Bindings:
+    - m_Name: 
+      m_Id: 6f619df5-ae49-4fe3-b26a-02efc56ecb76
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Attack
+      m_Flags: 0
+    - m_Name: 
+      m_Id: b5345207-e229-4fc1-8278-06bf1896c695
+      m_Path: <Mouse>/position
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Position
+      m_Flags: 0
 --- !u!1 &2013410473
 GameObject:
   m_ObjectHideFlags: 1

@@ -35,3 +35,4 @@ MonoBehaviour:
       Octaves: 2
       HeightOffset: 5
       Probability: 0.15
+  _sprite: {fileID: -2090037959, guid: c11bc1fc3cfe4344fb998a691a8bc796, type: 3}

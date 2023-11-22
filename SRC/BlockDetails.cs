@@ -12,7 +12,7 @@ public class BlockDetails : ScriptableObject {
     [SerializeField] private List<Side> _sides  = new(6);
     [SerializeField] private bool _isSolid;
     [SerializeField] private GenerationLevel _levels;
-    [SerializeField] private Sprite _sprite;
+    [PreviewSprite] [SerializeField] private Sprite _sprite;
 
     private static Dictionary<int, BlockDetails> _blockStore;
     private static Dictionary<int, BlockDataChunk> _dataChunks;

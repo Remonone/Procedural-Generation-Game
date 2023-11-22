@@ -12,21 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f308374b6a425b90032368165b2542, type: 3}
   m_Name: Diamond Ore
   m_EditorClassIdentifier: 
-  _id: 0
-  _name: 
-  _sides: []
-  _isSolid: 0
+  _id: 11
+  _name: Diamond Ore
+  _sides:
+  - side: 0
+    uv:
+    - {x: 0.125, y: 0.75}
+    - {x: 0.1875, y: 0.75}
+    - {x: 0.125, y: 0.8125}
+    - {x: 0.1875, y: 0.8125}
+  _isSolid: 1
   _levels:
     topLevel:
-      HeightScale: 0
-      Scale: 0
-      Octaves: 0
-      HeightOffset: 0
+      HeightScale: 1
+      Scale: 0.001
+      Octaves: 3
+      HeightOffset: 10
       Probability: 0
     lowLevel:
-      HeightScale: 0
-      Scale: 0
-      Octaves: 0
-      HeightOffset: 0
-      Probability: 0
-  _sprite: {fileID: 0}
+      HeightScale: 1
+      Scale: 0.001
+      Octaves: 3
+      HeightOffset: 5
+      Probability: 0.05
+  _sprite: {fileID: -1747238092, guid: c11bc1fc3cfe4344fb998a691a8bc796, type: 3}

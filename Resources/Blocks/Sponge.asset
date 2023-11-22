@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f308374b6a425b90032368165b2542, type: 3}
   m_Name: Sponge
   m_EditorClassIdentifier: 
-  _id: 0
-  _name: 
-  _sides: []
-  _isSolid: 0
+  _id: 4
+  _name: Sponge
+  _sides:
+  - side: 0
+    uv:
+    - {x: 0, y: 0.75}
+    - {x: 0.0625, y: 0.75}
+    - {x: 0, y: 0.8125}
+    - {x: 0.0625, y: 0.8125}
+  _isSolid: 1
   _levels:
     topLevel:
       HeightScale: 0
@@ -29,4 +35,4 @@ MonoBehaviour:
       Octaves: 0
       HeightOffset: 0
       Probability: 0
-  _sprite: {fileID: 0}
+  _sprite: {fileID: -1798528901, guid: c11bc1fc3cfe4344fb998a691a8bc796, type: 3}

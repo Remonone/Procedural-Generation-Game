@@ -22,3 +22,17 @@ MonoBehaviour:
     - {x: 0.125, y: 0.9375}
     - {x: 0.1875, y: 0.9375}
   _isSolid: 1
+  _levels:
+    topLevel:
+      HeightScale: 0
+      Scale: 0
+      Octaves: 0
+      HeightOffset: 0
+      Probability: 0
+    lowLevel:
+      HeightScale: 0
+      Scale: 0
+      Octaves: 0
+      HeightOffset: 0
+      Probability: 0
+  _sprite: {fileID: 1288537301, guid: c11bc1fc3cfe4344fb998a691a8bc796, type: 3}

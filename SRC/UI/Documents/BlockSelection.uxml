@@ -1,15 +1,35 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/SRC/UI/Documents/BlockBar.uss?fileID=7433441132597879392&amp;guid=03793ba6142c74f49b6f321d7bba6f35&amp;type=3#BlockBar" />
     <ui:VisualElement name="VisualElement" class="selection-bar" style="flex-grow: 1; position: absolute; bottom: 10px; height: auto; align-self: center; flex-direction: row;">
-        <ui:Button display-tooltip-when-elided="true" name="Button" tabindex="0" class="selection-button selection-button_selected" />
-        <ui:Button display-tooltip-when-elided="true" name="Button" class="selection-button" />
-        <ui:Button display-tooltip-when-elided="true" class="selection-button" />
-        <ui:Button display-tooltip-when-elided="true" class="selection-button" />
-        <ui:Button display-tooltip-when-elided="true" name="Button" class="selection-button" />
-        <ui:Button display-tooltip-when-elided="true" class="selection-button" />
-        <ui:Button display-tooltip-when-elided="true" class="selection-button" />
-        <ui:Button display-tooltip-when-elided="true" class="selection-button" />
-        <ui:Button display-tooltip-when-elided="true" class="selection-button" />
-        <ui:Button display-tooltip-when-elided="true" class="selection-button" />
+        <ui:Button display-tooltip-when-elided="true" name="0" tabindex="0" class="selection-button selection-button_selected">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
+        <ui:Button display-tooltip-when-elided="true" name="1" class="selection-button">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
+        <ui:Button display-tooltip-when-elided="true" name="2" class="selection-button">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
+        <ui:Button display-tooltip-when-elided="true" name="3" class="selection-button">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
+        <ui:Button display-tooltip-when-elided="true" name="4" class="selection-button">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
+        <ui:Button display-tooltip-when-elided="true" name="5" class="selection-button">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
+        <ui:Button display-tooltip-when-elided="true" name="6" class="selection-button">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
+        <ui:Button display-tooltip-when-elided="true" name="7" class="selection-button">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
+        <ui:Button display-tooltip-when-elided="true" name="8" class="selection-button">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
+        <ui:Button display-tooltip-when-elided="true" name="9" class="selection-button">
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+        </ui:Button>
     </ui:VisualElement>
 </ui:UXML>

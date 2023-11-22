@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f308374b6a425b90032368165b2542, type: 3}
   m_Name: Block
   m_EditorClassIdentifier: 
-  _id: 0
-  _name: 
-  _sides: []
-  _isSolid: 0
+  _id: 6
+  _name: Bricks
+  _sides:
+  - side: 0
+    uv:
+    - {x: 0.4375, y: 0.9375}
+    - {x: 0.5, y: 0.9375}
+    - {x: 0.4375, y: 1}
+    - {x: 0.5, y: 1}
+  _isSolid: 1
   _levels:
     topLevel:
       HeightScale: 0
@@ -29,4 +35,4 @@ MonoBehaviour:
       Octaves: 0
       HeightOffset: 0
       Probability: 0
-  _sprite: {fileID: 0}
+  _sprite: {fileID: 1084592475, guid: c11bc1fc3cfe4344fb998a691a8bc796, type: 3}

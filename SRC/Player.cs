@@ -50,12 +50,30 @@ public class Player : MonoBehaviour {
     }
 
     private void ChangeBlock(Vector3 position, Chunk chunk, int id) {
-        int blockX = (int)(Mathf.Round(position.x) - chunk.Location.x);
+        var location = chunk.Location;
+        Vector3Int shift = Vector3Int.zero;
+        int blockX = (int)(Mathf.Round(position.x) - location.x);
         int blockY = (int)(Mathf.Round(position.y) - chunk.Location.y);
         int blockZ = (int)(Mathf.Round(position.z) - chunk.Location.z);
+        shift.x += IsChunkShouldBeShifted(ref blockX, chunk.Width);
+        shift.y += IsChunkShouldBeShifted(ref blockY, chunk.Height);
+        shift.z += IsChunkShouldBeShifted(ref blockZ, chunk.Depth);
+        chunk = chunk.ShiftChunkByCoord(shift);
         var blocks = new(Vector3Int position, int id)[1];
         blocks[0].position = new Vector3Int(blockX, blockY, blockZ);
         blocks[0].id = id;
         chunk.SetBlocks(blocks);
+    }
+    private int IsChunkShouldBeShifted(ref int locationAxis, int size) {
+        if (locationAxis < 0) {
+            locationAxis = size - 1;
+            return -1;
+        }
+        if (locationAxis >= size) {
+            locationAxis = 0;
+            return 1;
+        }
+
+        return 0;
     }
 }

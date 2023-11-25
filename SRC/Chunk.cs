@@ -15,16 +15,19 @@ public class Chunk : MonoBehaviour {
     private int[] _blocksData;
     private Vector3Int _location;
     private MeshRenderer _renderer;
+    
+    public Chunk ShiftChunkByCoord(Vector3Int coord) => _parent.GetChunkByCoord(Location + coord);
 
     public int[] BlockData => _blocksData;
     public int Width => _width;
     public int Height => _height;
     public int Depth => _depth;
-    public Vector3 Location => _location;
+    public Vector3Int Location => _location;
     public MeshRenderer Renderer => _renderer;
 
     private JobHandle _jobHandle;
     private CalculateBlockTypes _cbs;
+    private World _parent;
 
 
     private void BuildChunk(World parent) {
@@ -55,6 +58,7 @@ public class Chunk : MonoBehaviour {
         _width = dimension.x;
         _height = dimension.y;
         _depth = dimension.z;
+        _parent = parent;
         
         _blocks = new Block[_width, _height, _depth];
         BuildChunk(parent);

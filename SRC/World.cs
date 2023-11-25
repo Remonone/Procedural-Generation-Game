@@ -14,29 +14,28 @@ public class World : MonoBehaviour {
     [SerializeField] private Camera _loadingCamera;
     [SerializeField] private int _renderDistance = 4;
 
+    private Vector3Int _lastBuildPosition;
+    
+    private static readonly WaitForSeconds Wfs = new(.3f);
 
     private static Vector3Int _worldDimensions = new(5, 7, 5);
     private static Vector3Int _chunkDimensions = new(16, 16, 16);
     
-    private static readonly Dictionary<int, BlockDetails> Blocks = new();
-    private static readonly WaitForSeconds Wfs = new(.3f);
-    
-    public PerlinSettings CaveSettings => _caveSettings;
-    
     private readonly HashSet<Vector3Int> _chunkChecker = new();
     private readonly HashSet<Vector2Int> _chunkColumns = new();
     private readonly Dictionary<Vector3Int, Chunk> _chunks = new();
-
-    private Vector3Int _lastBuildPosition;
-
     private readonly Queue<IEnumerator> _buildQueue = new();
-
+    
     private readonly List<Vector2Int> _spiralList = new() {
         new Vector2Int(_chunkDimensions.x, 0), 
         new Vector2Int(0, _chunkDimensions.z), 
         new Vector2Int(-_chunkDimensions.x, 0), 
         new Vector2Int(0, -_chunkDimensions.z)
     };
+
+    public PerlinSettings CaveSettings => _caveSettings;
+    
+    public Chunk GetChunkByCoord(Vector3Int coord) => _chunks[coord];
 
     private IEnumerator BuildCoordinator() {
         while (true) {
@@ -133,9 +132,6 @@ public class World : MonoBehaviour {
         StartCoroutine(UpdateWorld());
     }
 
-    public static void RegisterBlock(int id, BlockDetails details) {
-        Blocks.Add(id, details);
-    }
     
     private BlockDetails GenerateBlockByCoordinate(Vector3Int coord) {
         var blocks = BlocksByLayerIntersection(coord);
@@ -156,7 +152,7 @@ public class World : MonoBehaviour {
 
     
     private List<BlockDetails> BlocksByLayerIntersection(Vector3Int coordinate) {
-        List<BlockDetails> toReturn = (from block in Blocks.Values 
+        List<BlockDetails> toReturn = (from block in BlockDetails.BlockList
             let low = block.Layers.lowLevel 
             let high = block.Layers.topLevel 
             let lowValue = MeshUtils.fBM(coordinate.x, coordinate.z, low.Scale, low.HeightScale, low.Octaves, low.HeightOffset) 

@@ -17,6 +17,8 @@ public class BlockDetails : ScriptableObject {
     private static Dictionary<int, BlockDetails> _blockStore;
     private static Dictionary<int, BlockDataChunk> _dataChunks;
 
+    public static List<BlockDetails> BlockList => _blockStore.Values.ToList();
+
     public int ID => _id;
     public string Name => _name;
     public List<Side> Sides => _sides;
@@ -49,7 +51,6 @@ public class BlockDetails : ScriptableObject {
     }
 
     private static void InitBlock(BlockDetails details) {
-        World.RegisterBlock(details.ID, details);
         _dataChunks.Add(details.ID,
             new BlockDataChunk {
                 bottom = details._levels.lowLevel,

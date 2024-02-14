@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/SRC/UI/Documents/BlockBar.uss?fileID=7433441132597879392&amp;guid=03793ba6142c74f49b6f321d7bba6f35&amp;type=3#BlockBar" />
     <ui:VisualElement name="VisualElement" class="selection-bar" style="flex-grow: 1; position: absolute; bottom: 10px; height: auto; align-self: center; flex-direction: row;">
         <ui:Button display-tooltip-when-elided="true" name="0" tabindex="0" class="selection-button selection-button_selected">
-            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Textures/blockatlas.png?fileID=632947327&amp;guid=c11bc1fc3cfe4344fb998a691a8bc796&amp;type=3#blockatlas_0&apos;);" />
         </ui:Button>
         <ui:Button display-tooltip-when-elided="true" name="1" class="selection-button">
             <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />

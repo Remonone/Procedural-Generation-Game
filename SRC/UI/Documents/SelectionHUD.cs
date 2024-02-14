@@ -1,17 +1,11 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
 using UnityEngine.UIElements;
 
 namespace UI.Documents {
     public class SelectionHUD : MonoBehaviour {
-        
-       // 1. Property of active block(store active index)
-       // 2. SetActiveBlock(by id)(by shift +1, -1)
-       // 3. Set active index 0 by default
 
-       private List<BlockDetails> _selectionList = new(9);
+        private List<BlockDetails> _selectionList = new(9);
 
        private int _activeIndex = 0;
 
@@ -36,14 +30,15 @@ namespace UI.Documents {
            _root = GetComponent<UIDocument>().rootVisualElement;
            _root.Q<Button>(_activeIndex + "").AddToClassList(SELECTED_BUTTON);
            var i = 0;
-           foreach (var button in _root.Children()) {
+           foreach (var button in _root.Query<Button>().ToList()) {
                button.Q<VisualElement>().style.backgroundImage = new StyleBackground(_selectionList[i].Sprite);
+               print(button.Q<VisualElement>().style.backgroundImage.value.ToString());
                i++;
            }
        }
 
        public void SetActiveSlot(int index) {
-           if (index < 0 || index > 9) return;
+           if (index < 0 || index > 8) return;
            _activeIndex = index;
            UpdateBar();
        }
@@ -51,8 +46,8 @@ namespace UI.Documents {
        public void ShiftActiveSlot(bool isBackward) {
            int shiftTo = isBackward ? -1 : 1;
            var newIndex = _activeIndex + shiftTo;
-           if (newIndex < 0) newIndex = 9;
-           if (newIndex > 9) newIndex = 0;
+           if (newIndex < 0) newIndex = 8;
+           if (newIndex > 8) newIndex = 0;
            _activeIndex = newIndex;
            UpdateBar();
        }

@@ -7,7 +7,7 @@ namespace UI.Documents {
 
         private List<BlockDetails> _selectionList = new(9);
 
-       private int _activeIndex = 0;
+       private int _activeIndex;
 
        public BlockDetails ActiveBlock => _selectionList[_activeIndex];
 
@@ -32,7 +32,6 @@ namespace UI.Documents {
            var i = 0;
            foreach (var button in _root.Query<Button>().ToList()) {
                button.Q<VisualElement>().style.backgroundImage = new StyleBackground(_selectionList[i].Sprite);
-               print(button.Q<VisualElement>().style.backgroundImage.value.ToString());
                i++;
            }
        }
